@@ -1,0 +1,331 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+double board[4][4] = { };
+bool check ;
+
+//void endgame()
+//{
+//	int x, y, count=0,count2;
+//	for (x = 0; x < 4; x++)
+//	{
+//		for (y = 0; y < 4; y++)
+//		{
+//			if (board[x][y] == 0)
+//			{
+//				count++;
+//			}
+//			
+//		}
+//	}
+//	if (count == 0)
+//	{
+//		for (x = 0; x < 4; x++)
+//		{
+//			for (y = 0; y < 4; y++)
+//			{
+//				if ((x != 0) && (x != 3) && (y != 0) && (y != 3))
+//				{
+//					if ((board[x][y] == board[x + 1][y]) || (board[x][y] == board[x - 1][y]) || (board[x][y] == board[x][y + 1]) || (board[x][y] == board[x][y - 1]))
+//					{
+//						count2++;
+//					}
+//					
+//				}
+//				
+//			}
+//
+//		}
+//	}
+//}
+void display()
+{
+	/* system("cls"); */
+	for (int x = 0; x < 4; x++)
+	{
+		cout << " | ";
+		for (int y = 0; y < 4; y++)
+		{
+			cout << board[x][y] << " | ";
+		}
+		cout << endl << "--------------------" << endl;
+	}
+	cout << '\t' << "Press W to go up" << endl;
+	cout << '\t' << "Press A to go left" << endl;
+	cout << '\t' << "Press S to go down" << endl;
+	cout << '\t' << "Press D to go right" << endl;
+}
+void firstrandi()//gotta validate that a is never equal to c OR b is equal to d
+{
+	int x, a = 0, b = 0, c = 0, d = 0, numb;
+	for (x = 0; x < 2; x++)
+	{
+		srand(time(0));
+		while ((a == b) || (c == d))
+		{
+			a = rand() % 4;
+			b = rand() % 4;
+			c = rand() % 4;
+			d = rand() % 4;
+		}
+		numb = (rand() % 2) + 1;
+		board[a][b] = numb;
+		numb = (rand() % 2) + 1;
+		board[c][d] = numb;
+	}
+}
+
+void mainrandi()
+{
+	int i, j;
+	srand(time(0));
+	i = rand() % 4;
+	j = rand() % 4;
+	while (board[i][j] != 0)
+	{
+		i = rand() % 4;
+		j = rand() % 4;
+	}
+	board[i][j] = (rand() % 2) + 1;
+	display();
+}
+void right()
+{
+	int sum;
+	for (int x = 0; x < 4; x++)//sum issues>>>>>>>>>
+	{
+		int i = x;
+		for (int y = 4; y >0 ; y--)
+		{
+			 if ((board[x][y] == board[x][y - 1]))
+			{
+				 if ((x >= 0) && (y != 0))
+
+
+				 {
+
+
+
+					 sum = board[x][y] + board[x][y - 1];
+					 board[x][y] = 0;
+					 board[x][y - 1] = sum;
+
+				 }
+				
+			}
+			else if ((board[x][y] == board[x][y - 2]) && (board[x][y - 1] == 0) && (y > 1 )&& (x==i))
+			{
+				sum = board[x][y] + board[x][y - 2];
+				board[x][y] = sum;
+				board[x][y - 2] = 0;
+				break;
+			}
+			else if ((board[x][y] == board[x][y - 3]) && (board[x][y - 1] == 0) && (board[x][y - 2] == 0) && (y == 3)&& (x==i))
+			{
+				sum = board[x][y] + board[x][y - 3];
+				board[x][y] = sum;
+				board[x][y - 3] = 0;
+				break;
+			}
+		}
+	}
+	for (int x = 0; x < 4; x++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			for (int z = 3; z > 0; z--)
+			{
+				if (board[x][z] == 0 && board[x][z - 1] != 0)
+				{
+					board[x][z] = board[x][z - 1];
+
+					board[x][z - 1] = 0;
+				}
+			}
+		}
+	}
+	mainrandi();
+}
+
+void left()
+{
+	int sum;
+	for (int x = 0; x < 4; x++)
+	{
+		//for sum
+		for (int y = 0; y < 4; y++)
+		{
+			if ((board[x][y] == board[x][y + 1]) && (y < 3))
+			{
+				sum = board[x][y] + board[x][y + 1];
+				board[x][y] = sum;
+				board[x][y + 1] = 0;
+
+			}
+			else if ((board[x][y] == board[x][y + 2]) && (board[x][y + 1] == 0) && (y < 2))
+			{
+				sum = board[x][y] + board[x][y + 2];
+				board[x][y] = sum;
+				board[x][y + 2] = 0;
+				break;
+			}
+			else if ((board[x][y] == board[x][y + 3]) && (board[x][y + 1] == 0) && (board[x][y + 2] == 0) && (y < 1))
+			{
+				sum = board[x][y] + board[x][y + 3];
+				board[x][y] = sum;
+				board[x][y + 3] = 0;
+				break;
+			}
+		}
+	}
+	for (int x = 0; x < 4; x++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			//for swiping
+			for (int z = 0; z < 3; z++)
+			{
+				if (board[x][z] == 0 && board[x][z + 1] != 0)
+				{
+					board[x][z] = board[x][z + 1];
+					board[x][z + 1] = 0;
+				}
+			}
+		}
+	}
+	mainrandi();
+}
+
+
+void up()
+{
+	int sum;
+	for (int x = 0; x < 4; x++)
+	{
+		//for sum
+		for (int y = 0; y < 4; y++)
+		{
+			if ((board[x][y] == board[x + 1][y]) && (x < 3))
+			{
+				sum = board[x][y] + board[x + 1][y];
+				board[x][y] = sum;
+				board[x + 1][y] = 0;
+
+			}
+			else if ((board[x][y] == board[x + 2][y]) && (board[x + 1][y] == 0) && (x < 2))
+			{
+				sum = board[x][y] + board[x + 2][y];
+				board[x][y] = sum;
+				board[x + 2][y] = 0;
+				break;
+			}
+			else if ((board[x][y] == board[x + 3][y]) && (board[x + 1][y] == 0) && (board[x + 2][y] == 0) && (x < 1))
+			{
+				sum = board[x][y] + board[x + 3][y];
+				board[x][y] = sum;
+				board[x + 3][y] = 0;
+				break;
+			}
+		}
+	}
+	//for swiping
+	for (int x = 0; x < 4; x++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			for (int z = 0; z < 3; z++)
+			{
+				if (board[z][y] == 0 && board[z + 1][y] != 0)
+				{
+
+					board[z][y] = board[z + 1][y];
+
+					board[z + 1][y] = 0;
+				}
+			}
+		}
+	}
+	mainrandi();
+}
+
+void down()
+{
+	int sum;
+	for (int x = 4; x >0; x--)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			if ((board[x][y] == board[x - 1][y]) && (x > 0))
+			{
+				
+					sum = board[x][y] + board[x - 1][y];
+					board[x][y] = sum;
+					board[x - 1][y] = 0;
+			
+			}
+			else if ((board[x][y] == board[x - 2][y]) && (board[x - 1][y] == 0) && (x > 1))
+			{
+				sum = board[x][y] + board[x - 2][y];
+				board[x][y] = sum;
+				board[x - 2][y] = 0;
+				break;
+			}
+			else if ((board[x][y] == board[x - 3][y]) && (board[x - 1][y] == 0) && (board[x - 2][y] == 0) && (x == 3))
+			{
+				sum = board[x][y] + board[x - 3][y];
+				board[x][y] = sum;
+				board[x - 3][y] = 0;
+				break;
+			}
+		}
+	}
+	for (int x = 0; x < 4; x++)
+	{
+		for (int y = 0; y < 4; y++)
+		{
+			for (int z = 3; z > 0; z--)
+			{
+				if (board[z][y] == 0 && board[z - 1][y] != 0)
+				{
+					board[z][y] = board[z - 1][y];
+					board[z - 1][y] = 0;
+				}
+			}
+		}
+	}
+	mainrandi();
+}
+
+
+int main()
+{
+	cout << "Welcome to 1024 !!!" << endl;
+	check = 1;
+	char choice;
+	firstrandi();
+	display();
+	while (check == 1)
+	{
+		cout << "Enter a direction" << endl;
+		cin >> choice;
+		if ((choice == 'w') || (choice == 'W'))
+		{
+			up();
+		}
+		else if ((choice == 'a') || (choice == 'A'))
+		{
+			left();
+		}
+		else if ((choice == 's') || (choice == 'S'))
+		{
+			down();
+		}
+		else if ((choice == 'd') || (choice == 'D'))
+		{
+			right();
+		}
+	}
+	system("pause");
+	return 0;
+}
